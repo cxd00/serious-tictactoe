@@ -18,17 +18,21 @@ def winCheck(move, player, count):
     if -1 in {row, col, floor} or 4 in {row, col, floor}:
         return count
     if board[row][col][floor] == player:
-        winCheck([row+1, col, floor], player, count+1)
-        winCheck([row-1, col, floor], player, count+1)
-        winCheck([row, col+1, floor], player, count+1)
-        winCheck([row, col-1, floor], player, count+1)
-        winCheck([row, col, floor+1], player, count+1)
-        winCheck([row, col, floor-1], player, count+1)
-        # if row/col == 1:
-        #     winCheck([row + 1, col, floor], player, count+1)
-        # if col/floor == 1:
-        #     winCheck([row + 1, col, floor], player, count+1)
-        # if row/floor == 1:
-        #     winCheck([row + 1, col, floor], player, count+1)
+        count = count+1
+    winCheck([row + 1, col, floor], player, count + 1)
+    winCheck([row - 1, col, floor], player, count + 1)
+    winCheck([row, col + 1, floor], player, count + 1)
+    winCheck([row, col - 1, floor], player, count + 1)
+    winCheck([row, col, floor + 1], player, count + 1)
+    winCheck([row, col, floor - 1], player, count + 1)
+    if row / col == 1:
+        winCheck([row + 1, col + 1, floor], player, count + 1)
+        winCheck([row - 1, col - 1, floor], player, count + 1)
+    if col / floor == 1:
+        winCheck([row, col + 1, floor + 1], player, count + 1)
+        winCheck([row, col - 1, floor - 1], player, count + 1)
+    if row / floor == 1:
+        winCheck([row + 1, col, floor + 1], player, count + 1)
+        winCheck([row - 1, col, floor - 1], player, count + 1)
 
 
