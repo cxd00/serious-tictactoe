@@ -64,5 +64,5 @@ class TestLearn(TestCase):
     def test_winCheck(self):
         printBoard()
         move = 0, 0, 3
-        result = winCheck(move, 0)
-        self.assertEqual(result, 1)
+        result = winCheck(move, 1)
+        self.assertEqual(result, 0)
