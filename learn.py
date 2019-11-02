@@ -5,21 +5,40 @@ import unittest
 from unittest import TestCase
 
 board = numpy.zeros((4, 4, 4))
-# board = [[[0] * 4] * 4] * 4
+probabilities = [[[1] * 4] * 4] * 4
 # board[row][col][floor]
 
-potential_moves = {}
-moves = {}
+potentialMoves = {}
+p1moves = {}
+p2moves = {}
 
 for i in range(4):
     for j in range(4):
         for k in range(4):
             coord = (i, j, k)
-            potential_moves[coord] = 0
+            potentialMoves[coord] = 0
+
 
 
 def clearBoard():
     board * 0
+
+
+def learn(loops):
+    # p1 chooses random move based on probabilities of the board
+        # order potential_moves, take from top
+        # add to p1moves
+        # wincheck
+    # p2 chooses next move
+        # take next move off of potential_moves, add to p2moves
+        # wincheck
+    # call calculate
+
+
+def calculate():
+    # match everything in the winner's dict to the board, increase
+    # do the same with the loser
+    # update the potentialMoves list
 
 
 def winCheck(move, player):
