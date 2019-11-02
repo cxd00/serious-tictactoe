@@ -84,6 +84,8 @@ def winCheck(move, player):
 
 # -------------------TESTS-------------------
 class TestLearn(TestCase):
+	# Use the following command in the terminal to view the individual test results...
+	# python -m unittest -v learn.py
 
 	def test_winCheck_floor(self):
 		clearBoard()
