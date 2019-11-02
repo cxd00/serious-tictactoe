@@ -1,8 +1,11 @@
 import sys
 import collections
+import numpy
+import unittest
 from unittest import TestCase
 
-board = [[[0] * 4] * 4] * 4
+board = numpy.zeros((4, 4, 4))
+# board = [[[0] * 4] * 4] * 4
 # board[row][col][floor]
 
 potential_moves = {}
@@ -14,9 +17,9 @@ for i in range(4):
             coord = (i, j, k)
             potential_moves[coord] = 0
 
-def printBoard():
-    for x in range(len(board)):
-        print(board[x])
+
+def clearBoard():
+    board * 0
 
 
 def winCheck(move, player):
@@ -61,8 +64,53 @@ def winCheck(move, player):
 
 # -------------------TESTS-------------------
 class TestLearn(TestCase):
-    def test_winCheck(self):
-        printBoard()
+
+    def test_winCheck_floor(self):
+        clearBoard()
+        board[0][0][0] = 1
+        board[0][0][1] = 1
+        board[0][0][2] = 1
+        board[0][0][3] = 1
         move = 0, 0, 3
         result = winCheck(move, 1)
-        self.assertEqual(result, 0)
+        self.assertEqual(result, 1)
+
+    def test_winCheck_column(self):
+        clearBoard()
+        board[0][0][0] = 1
+        board[0][1][0] = 1
+        board[0][2][0] = 1
+        board[0][3][0] = 1
+        move = 0, 3, 0
+        result = winCheck(move, 1)
+        self.assertEqual(result, 1)
+
+    def test_winCheck_row(self):
+        clearBoard()
+        board[0][0][0] = 1
+        board[1][0][0] = 1
+        board[2][0][0] = 1
+        board[3][0][0] = 1
+        move = 3, 0, 0
+        result = winCheck(move, 1)
+        self.assertEqual(result, 1)
+
+    def test_winCheck_diagonal(self):
+        clearBoard()
+        board[0][0][0] = 1
+        board[0][1][1] = 1
+        board[0][2][2] = 1
+        board[0][3][3] = 1
+        move = 0, 3, 3
+        result = winCheck(move, 1)
+        self.assertEqual(result, 1)
+
+    def test_winCheck_no_win(self):
+        clearBoard()
+        move = 0, 0, 0
+        result = winCheck(move, 1)
+        self.assertEqual(result, 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
