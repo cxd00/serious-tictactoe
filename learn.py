@@ -1,9 +1,10 @@
 import sys
 import collections
+import operator
 from unittest import TestCase
 
 board = [[[0] * 4] * 4] * 4
-probabilities = [[[1] * 4] * 4] * 4
+utility = [[[0] * 4] * 4] * 4
 # board[row][col][floor]
 
 potentialMoves = {}
@@ -23,15 +24,24 @@ def printBoard():
 
 
 def learn(loops):
-    # p1 chooses random move based on probabilities of the board
-        # order potential_moves, take from top
-        # add to p1moves
-        # wincheck
-    # p2 chooses next move
-        # take next move off of potential_moves, add to p2moves
-        # wincheck
-    # call calculate
+    p1, p2 = "X", "O"
+    maxUtility = (2, 2, 2) # maxUtility are the coordinates of the best utility value
+    for loop in range(loops):
+        # p1 chooses move based on probabilities of the board
+        p1move = potentialMoves.pop(maxUtility) # p1move is the best utility value
+        p1moves[maxUtility] = p1move # add to list of player 1's moves in the form (key:coordinate, value:utility)
 
+        maxUtility = max(potentialMoves.items(), key = operator.itemgetter(1))[0]
+        if winCheck(board, p1) == 1:
+            calculate()
+
+        # p2 chooses next move
+        p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+        p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
+
+        maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+        if winCheck(board, p2) == 1:
+            calculate()
 
 def calculate():
     # match everything in the winner's dict to the board, increase
