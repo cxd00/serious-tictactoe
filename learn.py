@@ -8,8 +8,8 @@ utility = [[[0] * 4] * 4] * 4
 # board[row][col][floor]
 
 potentialMoves = {}
-p1moves = {}
-p2moves = {}
+p1moves = collections.OrderedDict()
+p2moves = collections.OrderedDict()
 
 for i in range(4):
     for j in range(4):
@@ -29,11 +29,11 @@ def learn(loops):
     for loop in range(loops):
         # p1 chooses move based on probabilities of the board
         p1move = potentialMoves.pop(maxUtility) # p1move is the best utility value
-        p1moves[maxUtility] = p1move # add to list of player 1's moves in the form (key:coordinate, value:utility)
+        p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 
         maxUtility = max(potentialMoves.items(), key = operator.itemgetter(1))[0]
         if winCheck(board, p1) == 1:
-            calculate()
+            calculate(p1moves)
 
         # p2 chooses next move
         p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
@@ -41,12 +41,21 @@ def learn(loops):
 
         maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
         if winCheck(board, p2) == 1:
-            calculate()
+            calculate(p2moves)
 
-def calculate():
+
+def calculate(winner):
     # match everything in the winner's dict to the board, increase
     # do the same with the loser
     # update the potentialMoves list
+    qMax = 1
+    while not len(winner.keys()) == 0:
+        x, y, z = winner.keys()[-1][0], winner.keys()[-1][1], winner.keys()[-1][2]
+        utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
+        potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
+        del winner[(x, y, z)]
+    p1moves = {}
+    p2moves = {}
 
 
 def winCheck(move, player):
