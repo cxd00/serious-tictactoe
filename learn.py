@@ -1,16 +1,18 @@
 import sys
 import collections
+import operator
 import numpy
 import unittest
 from unittest import TestCase
 
 board = numpy.zeros((4, 4, 4))
 probabilities = numpy.ones((4, 4, 4))
+utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 
 potentialMoves = {}
-p1moves = {}
-p2moves = {}
+p1moves = collections.OrderedDict()
+p2moves = collections.OrderedDict()
 
 for i in range(4):
 	for j in range(4):
@@ -24,24 +26,42 @@ def clearBoard():
 
 
 def learn(loops):
+	p1, p2 = "X", "O"
+	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
+	for loop in range(loops):
+		# p1 chooses move based on probabilities of the board
+		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 
-	pass
+	# p1 chooses random move based on probabilities of the board
+	# order potential_moves, take from top
+	# add to p1moves
+	# wincheck
+	# p2 chooses next move
+	# take next move off of potential_moves, add to p2moves
+	# wincheck
+	# call calculate
+	# p2 chooses next move
+	p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+	p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
 
-# p1 chooses random move based on probabilities of the board
-# order potential_moves, take from top
-# add to p1moves
-# wincheck
-# p2 chooses next move
-# take next move off of potential_moves, add to p2moves
-# wincheck
-# call calculate
+	# maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+	if winCheck(board, p2) == 1:
+		calculate(p2moves)
 
 
-def calculate():
-	pass
-# match everything in the winner's dict to the board, increase
-# do the same with the loser
-# update the potentialMoves list
+def calculate(winner):
+	# match everything in the winner's dict to the board, increase
+	# do the same with the loser
+	# update the potentialMoves list
+	qMax = 1
+	while not len(winner.keys()) == 0:
+		x, y, z = winner.keys()[-1][0], winner.keys()[-1][1], winner.keys()[-1][2]
+		utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
+		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
+		del winner[(x, y, z)]
+	p1moves = {}
+	p2moves = {}
 
 
 def winCheck(move, player):
