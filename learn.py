@@ -32,22 +32,17 @@ def learn(loops):
 		# p1 chooses move based on probabilities of the board
 		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
+		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-	# p1 chooses random move based on probabilities of the board
-	# order potential_moves, take from top
-	# add to p1moves
-	# wincheck
-	# p2 chooses next move
-	# take next move off of potential_moves, add to p2moves
-	# wincheck
-	# call calculate
-	# p2 chooses next move
-	p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
-	p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
+		if winCheck(board, p1) == 1:
+			calculate(p1moves)
 
-	# maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
-	if winCheck(board, p2) == 1:
-		calculate(p2moves)
+		p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+		p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
+		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+
+		if winCheck(board, p2) == 1:
+			calculate(p2moves)
 
 
 def calculate(winner):
