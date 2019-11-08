@@ -5,7 +5,7 @@ import unittest
 from unittest import TestCase
 
 board = numpy.zeros((4, 4, 4))
-probabilities = [[[1] * 4] * 4] * 4
+probabilities = numpy.ones((4, 4, 4))
 # board[row][col][floor]
 
 potentialMoves = {}
@@ -24,6 +24,7 @@ def clearBoard():
 
 
 def learn(loops):
+
 	pass
 
 # p1 chooses random move based on probabilities of the board
