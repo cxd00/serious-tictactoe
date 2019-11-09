@@ -20,28 +20,27 @@ for i in range(4):
 			potentialMoves[coord] = 0
 
 
-def clearBoard():
-	board * 0
-
-
 def learn(loops):
+	board = numpy.zeros((4, 4, 4))
 	p1, p2 = "X", "O"
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
 		# p1 chooses move based on probabilities of the board
 		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
+		board[maxUtility] = p1move
+		if winCheck(maxUtility, p1) == 1:
+			calculate(p1moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-		if winCheck(board, p1) == 1:
-			calculate(p1moves)
 
 		p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
+		board[maxUtility] = p2move
+		if winCheck(maxUtility, p2) == 1:
+			calculate(p2moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-		if winCheck(board, p2) == 1:
-			calculate(p2moves)
 
 def calculate(winner):
 	# match everything in the winner's dict to the board, increase
@@ -60,14 +59,13 @@ def calculate(winner):
 def winCheck(move, player):
 	# 0 is no win, 1 is yes win
 	row, col, floor = move[0], move[1], move[2]
-
 	r = collections.Counter([board[i][col][floor] for i in range(4)])
 	if r[player] == 4:
 		return 1
 	c = collections.Counter([board[row][i][floor] for i in range(4)])
 	if c[player] == 4:
 		return 1
-	f = collections.Counter([board[row][col][i] for i in range(4)])
+	f = collections.Counter([board[row][col][i]for i in range(4)])
 	if f[player] == 4:
 		return 1
 
@@ -101,15 +99,23 @@ class TestLearn(TestCase):
 	# Use the following command in the terminal to view the individual test results...
 	# python -m unittest -v learn.py
 
+	def clearBoard(self):
+		for i in range(4):
+			for j in range(4):
+				for k in range(4):
+					board[i][j][k] = 0
+
+
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
 		learn(10)
+		print(utility)
 		self.assertNotEqual(numpy.zeros((4, 4, 4)), utility)
 
 	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
-		clearBoard()
+		self.clearBoard()
 		board[0][0][0] = 1
 		board[0][0][1] = 1
 		board[0][0][2] = 1
@@ -119,7 +125,7 @@ class TestLearn(TestCase):
 		self.assertEqual(result, 1)
 
 	def test_winCheck_column(self):
-		clearBoard()
+		self.clearBoard()
 		board[0][0][0] = 1
 		board[0][1][0] = 1
 		board[0][2][0] = 1
@@ -129,7 +135,7 @@ class TestLearn(TestCase):
 		self.assertEqual(result, 1)
 
 	def test_winCheck_row(self):
-		clearBoard()
+		self.clearBoard()
 		board[0][0][0] = 1
 		board[1][0][0] = 1
 		board[2][0][0] = 1
@@ -139,7 +145,7 @@ class TestLearn(TestCase):
 		self.assertEqual(result, 1)
 
 	def test_winCheck_diagonal(self):
-		clearBoard()
+		self.clearBoard()
 		board[0][0][0] = 1
 		board[0][1][1] = 1
 		board[0][2][2] = 1
@@ -149,10 +155,11 @@ class TestLearn(TestCase):
 		self.assertEqual(result, 1)
 
 	def test_winCheck_no_win(self):
-		clearBoard()
+		self.clearBoard()
 		move = 0, 0, 0
 		result = winCheck(move, 1)
-		self.assertEqual(result, 1)
+		print(board)
+		self.assertEqual(result, 0)
 
 
 if __name__ == '__main__':
