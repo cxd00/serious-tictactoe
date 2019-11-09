@@ -6,6 +6,15 @@ import unittest
 from unittest import TestCase
 
 board = numpy.chararray((4, 4, 4))
+
+
+def clearBoard():
+	for i in range(4):
+			for j in range(4):
+				for k in range(4):
+					board[i][j][k] = ''
+
+
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 
@@ -21,7 +30,7 @@ for i in range(4):
 
 
 def learn(loops):
-	board = numpy.chararray((4, 4, 4))
+	clearBoard()
 	p1, p2 = 'X', 'O'
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
@@ -156,7 +165,7 @@ class TestLearn(TestCase):
 		board[0][2][2] = 'X'
 		board[0][3][3] = 'X'
 		move = 0, 3, 3
-		result = winCheck(move, "X")
+		result = winCheck(move, 'X')
 		self.assertEqual(result, 1)
 
 	def test_winCheck_no_win(self):
