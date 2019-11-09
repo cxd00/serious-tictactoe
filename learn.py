@@ -117,7 +117,8 @@ class TestLearn(TestCase):
 
 	def test_learn_run(self):
 		learn(10000)
-		self.assertFalse(numpy.any(utility == 0))
+		print(utility)
+		self.assertFalse(numpy.all(utility == 0))
 
 	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
