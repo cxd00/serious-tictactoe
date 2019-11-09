@@ -8,10 +8,16 @@ from unittest import TestCase
 
 def clearBoard():
 	for i in range(4):
-			for j in range(4):
-				for k in range(4):
-					board[i][j][k] = ''
+		for j in range(4):
+			for k in range(4):
+				board[i][j][k] = ''
 
+def resetPotentialMoves():
+	for i in range(4):
+		for j in range(4):
+			for k in range(4):
+				coord = (i, j, k)
+				potentialMoves[coord] = 0
 
 board = numpy.chararray((4, 4, 4))
 clearBoard()
@@ -19,34 +25,34 @@ utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 p1, p2 = b'X', b'O'
 potentialMoves = {}
+resetPotentialMoves()
 p1moves = collections.OrderedDict()
 p2moves = collections.OrderedDict()
-
-for i in range(4):
-	for j in range(4):
-		for k in range(4):
-			coord = (i, j, k)
-			potentialMoves[coord] = 0
 
 
 def learn(loops):
 	clearBoard()
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
-	for loop in range(loops):
-		# p1 chooses move based on probabilities of the board
-		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
-		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
-		board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
-		if winCheck(maxUtility, p1) == 1:
-			calculate(p1moves)
-		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+	for loop in range (loops):
+		while True:
+			# p1 chooses move based on probabilities of the board
+			p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
+			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
+			if winCheck(maxUtility, p1) == 1:
+				calculate(p1moves)
+				break
+			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-		p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
-		p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
-		board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
-		if winCheck(maxUtility, p2) == 1:
-			calculate(p2moves)
-		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+			p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
+			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
+			if winCheck(maxUtility, p2) == 1:
+				calculate(p2moves)
+				break
+			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+		clearBoard()
+		resetPotentialMoves()
 
 
 def calculate(winner):
@@ -166,7 +172,6 @@ class TestLearn(TestCase):
 		clearBoard()
 		move = 0, 0, 0
 		result = winCheck(move, p1)
-		print(board)
 		self.assertEqual(result, 0)
 
 
