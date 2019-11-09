@@ -5,7 +5,17 @@ import numpy
 import unittest
 from unittest import TestCase
 
-board = numpy.zeros((4, 4, 4))
+board = numpy.chararray((4, 4, 4))
+
+
+def clearBoard():
+	for i in range(4):
+		for j in range(4):
+			for k in range(4):
+				board[i][j][k] = ''
+
+
+clearBoard()
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 
@@ -21,14 +31,14 @@ for i in range(4):
 
 
 def learn(loops):
-	board = numpy.zeros((4, 4, 4))
+	board = numpy.chararray((4, 4, 4))
 	p1, p2 = "X", "O"
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
 		# p1 chooses move based on probabilities of the board
 		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
-		board[maxUtility] = p1move
+		board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1move
 
 		if winCheck(maxUtility, p1) == 1:
 			calculate(p1moves)
@@ -36,7 +46,7 @@ def learn(loops):
 
 		p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
-		board[maxUtility] = p2move
+		board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2move
 
 		if winCheck(maxUtility, p2) == 1:
 			calculate(p2moves)
@@ -52,6 +62,7 @@ def calculate(winner):
 		x, y, z = winner.keys()[-1][0], winner.keys()[-1][1], winner.keys()[-1][2]
 		utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
 		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
+		print(utility)
 		del winner[(x, y, z)]
 	p1moves = {}
 	p2moves = {}
@@ -110,61 +121,61 @@ class TestLearn(TestCase):
 		for i in range(4):
 			for j in range(4):
 				for k in range(4):
-					board[i][j][k] = 0
+					board[i][j][k] = ''
 
 
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
 		learn(10)
-		print(utility)
 		self.assertFalse(numpy.any(utility == 0))
 
 	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
 		self.clearBoard()
-		board[0][0][0] = 1
-		board[0][0][1] = 1
-		board[0][0][2] = 1
-		board[0][0][3] = 1
+		board[0][0][0] = "X"
+		board[0][0][1] = "X"
+		board[0][0][2] = "X"
+		board[0][0][3] = "X"
+		print(board)
 		move = 0, 0, 3
-		result = winCheck(move, 1)
+		result = winCheck(move, "X")
 		self.assertEqual(result, 1)
 
 	def test_winCheck_column(self):
 		self.clearBoard()
-		board[0][0][0] = 1
-		board[0][1][0] = 1
-		board[0][2][0] = 1
-		board[0][3][0] = 1
+		board[0][0][0] = "X"
+		board[0][1][0] = "X"
+		board[0][2][0] = "X"
+		board[0][3][0] = "X"
 		move = 0, 3, 0
-		result = winCheck(move, 1)
+		result = winCheck(move, "X")
 		self.assertEqual(result, 1)
 
 	def test_winCheck_row(self):
 		self.clearBoard()
-		board[0][0][0] = 1
-		board[1][0][0] = 1
-		board[2][0][0] = 1
-		board[3][0][0] = 1
+		board[0][0][0] = "X"
+		board[1][0][0] = "X"
+		board[2][0][0] = "X"
+		board[3][0][0] = "X"
 		move = 3, 0, 0
-		result = winCheck(move, 1)
+		result = winCheck(move, "X")
 		self.assertEqual(result, 1)
 
 	def test_winCheck_diagonal(self):
 		self.clearBoard()
-		board[0][0][0] = 1
-		board[0][1][1] = 1
-		board[0][2][2] = 1
-		board[0][3][3] = 1
+		board[0][0][0] = "X"
+		board[0][1][1] = "X"
+		board[0][2][2] = "X"
+		board[0][3][3] = "X"
 		move = 0, 3, 3
-		result = winCheck(move, 1)
+		result = winCheck(move, "X")
 		self.assertEqual(result, 1)
 
 	def test_winCheck_no_win(self):
 		self.clearBoard()
 		move = 0, 0, 0
-		result = winCheck(move, 1)
+		result = winCheck(move, "X")
 		print(board)
 		self.assertEqual(result, 0)
 
