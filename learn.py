@@ -48,6 +48,7 @@ def learn(loops):
 			calculate(p2moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
+
 def calculate(winner):
 	# match everything in the winner's dict to the board, increase
 	# do the same with the loser
@@ -58,8 +59,8 @@ def calculate(winner):
 		utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
 		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
 		del winner[(x, y, z)]
-	p1moves = {}
-	p2moves = {}
+	p1moves.clear()
+	p2moves.clear()
 
 
 def winCheck(move, player):
@@ -116,7 +117,7 @@ class TestLearn(TestCase):
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
-		learn(10000)
+		learn(100)
 		print(utility)
 		self.assertFalse(numpy.all(utility == 0))
 
