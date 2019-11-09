@@ -54,10 +54,9 @@ def calculate(winner):
 	# update the potentialMoves list
 	qMax = 1
 	while not len(winner.keys()) == 0:
-		x, y, z = winner.keys()[-1][0], winner.keys()[-1][1], winner.keys()[-1][2]
+		x, y, z = list(winner.keys())[-1][0], list(winner.keys())[-1][1], list(winner.keys())[-1][2]
 		utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
 		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
-		print(utility)
 		del winner[(x, y, z)]
 	p1moves = {}
 	p2moves = {}
@@ -117,7 +116,7 @@ class TestLearn(TestCase):
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
-		learn(10)
+		learn(10000)
 		self.assertFalse(numpy.any(utility == 0))
 
 	#------------------WINCHECK TESTS------------------
