@@ -5,8 +5,6 @@ import numpy
 import unittest
 from unittest import TestCase
 
-board = numpy.chararray((4, 4, 4))
-
 
 def clearBoard():
 	for i in range(4):
@@ -15,9 +13,11 @@ def clearBoard():
 					board[i][j][k] = ''
 
 
+board = numpy.chararray((4, 4, 4))
+clearBoard()
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
-
+p1, p2 = b'X', b'O'
 potentialMoves = {}
 p1moves = collections.OrderedDict()
 p2moves = collections.OrderedDict()
@@ -31,7 +31,6 @@ for i in range(4):
 
 def learn(loops):
 	clearBoard()
-	p1, p2 = 'X', 'O'
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
 		# p1 chooses move based on probabilities of the board
@@ -48,7 +47,6 @@ def learn(loops):
 		if winCheck(maxUtility, p2) == 1:
 			calculate(p2moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
-		print(board)
 
 def calculate(winner):
 	# match everything in the winner's dict to the board, increase
@@ -114,11 +112,6 @@ class TestLearn(TestCase):
 	# Use the following command in the terminal to view the individual test results...
 	# python -m unittest -v learn.py
 
-	def clearBoard(self):
-		for i in range(4):
-			for j in range(4):
-				for k in range(4):
-					board[i][j][k] = ''
 
 
 	#------------------LEARN TESTS---------------------
@@ -129,49 +122,49 @@ class TestLearn(TestCase):
 
 	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
-		self.clearBoard()
-		board[0][0][0] = 'X'
-		board[0][0][1] = 'X'
-		board[0][0][2] = 'X'
-		board[0][0][3] = 'X'
+		clearBoard()
+		board[0][0][0] = p1
+		board[0][0][1] = p1
+		board[0][0][2] = p1
+		board[0][0][3] = p1
 		move = 0, 0, 3
-		result = winCheck(move, 'X')
+		result = winCheck(move, p1)
 		self.assertEqual(result, 1)
 
 	def test_winCheck_column(self):
-		self.clearBoard()
-		board[0][0][0] = 'X'
-		board[0][1][0] = 'X'
-		board[0][2][0] = 'X'
-		board[0][3][0] = 'X'
+		clearBoard()
+		board[0][0][0] = p1
+		board[0][1][0] = p1
+		board[0][2][0] = p1
+		board[0][3][0] = p1
 		move = 0, 3, 0
-		result = winCheck(move, 'X')
+		result = winCheck(move, p1)
 		self.assertEqual(result, 1)
 
 	def test_winCheck_row(self):
-		self.clearBoard()
-		board[0][0][0] = 'X'
-		board[1][0][0] = 'X'
-		board[2][0][0] = 'X'
-		board[3][0][0] = 'X'
+		clearBoard()
+		board[0][0][0] = p1
+		board[1][0][0] = p1
+		board[2][0][0] = p1
+		board[3][0][0] = p1
 		move = 3, 0, 0
-		result = winCheck(move, 'X')
+		result = winCheck(move, p1)
 		self.assertEqual(result, 1)
 
 	def test_winCheck_diagonal(self):
-		self.clearBoard()
-		board[0][0][0] = 'X'
-		board[0][1][1] = 'X'
-		board[0][2][2] = 'X'
-		board[0][3][3] = 'X'
+		clearBoard()
+		board[0][0][0] = p1
+		board[0][1][1] = p1
+		board[0][2][2] = p1
+		board[0][3][3] = p1
 		move = 0, 3, 3
-		result = winCheck(move, 'X')
+		result = winCheck(move, p1)
 		self.assertEqual(result, 1)
 
 	def test_winCheck_no_win(self):
-		self.clearBoard()
+		clearBoard()
 		move = 0, 0, 0
-		result = winCheck(move, 'X')
+		result = winCheck(move, p1)
 		print(board)
 		self.assertEqual(result, 0)
 
