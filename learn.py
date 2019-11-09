@@ -6,7 +6,6 @@ import unittest
 from unittest import TestCase
 
 board = numpy.zeros((4, 4, 4))
-probabilities = numpy.ones((4, 4, 4))
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 
@@ -43,7 +42,6 @@ def learn(loops):
 
 		if winCheck(board, p2) == 1:
 			calculate(p2moves)
-
 
 def calculate(winner):
 	# match everything in the winner's dict to the board, increase
@@ -103,6 +101,13 @@ class TestLearn(TestCase):
 	# Use the following command in the terminal to view the individual test results...
 	# python -m unittest -v learn.py
 
+	#------------------LEARN TESTS---------------------
+
+	def test_learn_run(self):
+		learn(10)
+		self.assertNotEqual(numpy.zeros((4, 4, 4)), utility)
+
+	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
 		clearBoard()
 		board[0][0][0] = 1
