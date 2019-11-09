@@ -29,14 +29,15 @@ def learn(loops):
 		p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 		board[maxUtility] = p1move
+
 		if winCheck(maxUtility, p1) == 1:
 			calculate(p1moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-
 		p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 		p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
 		board[maxUtility] = p2move
+
 		if winCheck(maxUtility, p2) == 1:
 			calculate(p2moves)
 		maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
@@ -72,24 +73,30 @@ def winCheck(move, player):
 	# check diagonals
 	if row - col == 0:
 		d0 = collections.Counter([board[i][i][floor] for i in range(4)])
+		if d0[player] == 4:
+			return 1
 	elif row + col == 3:
 		d0 = collections.Counter([board[i][3 - i][floor] for i in range(4)])
-	if d0[player] == 4:
-		return 1
+		if d0[player] == 4:
+			return 1
 
 	if col - floor == 0:
 		d1 = collections.Counter([board[row][i][i] for i in range(4)])
+		if d1[player] == 4:
+			return 1
 	elif col + floor == 3:
 		d1 = collections.Counter([board[row][i][3 - i] for i in range(4)])
-	if d1[player] == 4:
-		return 1
+		if d1[player] == 4:
+			return 1
 
 	if floor - row == 0:
 		d2 = collections.Counter([board[i][col][i] for i in range(4)])
+		if d2[player] == 4:
+			return 1
 	elif floor + row == 3:
 		d2 = collections.Counter([board[i][col][3 - i] for i in range(4)])
-	if d2[player] == 4:
-		return 1
+		if d2[player] == 4:
+			return 1
 
 	return 0
 
@@ -111,7 +118,7 @@ class TestLearn(TestCase):
 	def test_learn_run(self):
 		learn(10)
 		print(utility)
-		self.assertNotEqual(numpy.zeros((4, 4, 4)), utility)
+		self.assertFalse(numpy.any(utility == 0))
 
 	#------------------WINCHECK TESTS------------------
 	def test_winCheck_floor(self):
