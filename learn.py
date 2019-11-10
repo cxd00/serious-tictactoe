@@ -57,7 +57,7 @@ def learn(loops):
 				calculate(p1moves, loop, loops)
 				break
 
-			if potentialMoves():
+			if potentialMoves:
 				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 			else:
 				break
@@ -76,7 +76,7 @@ def learn(loops):
 				calculate(p2moves, loop, loops)
 				break
 
-			if potentialMoves():
+			if potentialMoves:
 				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 			else:
 				break
