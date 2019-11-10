@@ -141,11 +141,12 @@ def winCheck(move, player):
 learn(int(sys.argv[1]))
 utility1 = utility
 
-learn(int(sys.argv[2]))
+learn(int(sys.argv[2]) - int(sys.argv[1]))
 utility2 = utility
 
-learn(int(sys.argv[3]))
+learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
 utility3 = utility
+print(numpy.sum(utility3))
 print(utility1)
 print(utility2)
 print(utility3)
