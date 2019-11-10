@@ -94,7 +94,7 @@ def calculate(winner, currLoop, loops):
 
 
 def winCheck(move, player):
-	# 0 is no win, 1 is yes win
+	# 0 is no win, 1 is yes win, -1 is 3-in-a-row
 	row, col, floor = move[0], move[1], move[2]
 	r = collections.Counter([board[i][col][floor] for i in range(4)])
 	if r[player] == 4:
@@ -135,6 +135,15 @@ def winCheck(move, player):
 			return 1
 
 	return 0
+
+
+# -------------- actual script run -------------- #
+learn(int(sys.argv[1]))
+print(utility)
+learn(int(sys.argv[2]))
+print(utility)
+learn(int(sys.argv[3]))
+print(utility)
 
 
 # -------------------TESTS-------------------
