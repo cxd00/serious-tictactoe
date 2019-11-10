@@ -12,12 +12,14 @@ def clearBoard():
 			for k in range(4):
 				board[i][j][k] = ''
 
+
 def resetPotentialMoves():
 	for i in range(4):
 		for j in range(4):
 			for k in range(4):
 				coord = (i, j, k)
 				potentialMoves[coord] = 0
+
 
 board = numpy.chararray((4, 4, 4))
 clearBoard()
@@ -33,7 +35,7 @@ p2moves = collections.OrderedDict()
 def learn(loops):
 	clearBoard()
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
-	for loop in range (loops):
+	for loop in range(loops):
 		while True:
 			# p1 chooses move based on probabilities of the board
 			p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
@@ -60,9 +62,11 @@ def calculate(winner):
 	# do the same with the loser
 	# update the potentialMoves list
 	qMax = 1
+	alpha = 0.4
 	while not len(winner.keys()) == 0:
 		x, y, z = list(winner.keys())[-1][0], list(winner.keys())[-1][1], list(winner.keys())[-1][2]
-		utility[x][y][z] += 0.99 * qMax  # update utility function with Q-value
+		utility[x][y][z] += alpha * qMax  # update utility function with Q-value
+		qMax = qMax * alpha
 		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
 		del winner[(x, y, z)]
 	p1moves.clear()
