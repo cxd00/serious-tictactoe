@@ -20,7 +20,7 @@ def resetPotentialMoves():
 		for j in range(4):
 			for k in range(4):
 				coord = (i, j, k)
-				potentialMoves[coord] = 0
+				potentialMoves[coord] = utility[i][j][k]
 
 
 board = numpy.chararray((4, 4, 4))
@@ -34,6 +34,8 @@ potentialMoves = {}
 resetPotentialMoves()
 p1moves = collections.OrderedDict()
 p2moves = collections.OrderedDict()
+dangerZones = []
+winZones = []
 
 
 def learn(loops):
@@ -54,8 +56,8 @@ def learn(loops):
 			p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
 
-			if winCheck(maxUtility, p1) == 1:
-				calculate(p1moves, loop, loops)
+			if winCheck(maxUtility, p1, 4) == 1:
+				calculate(p1moves)
 				break
 
 			if potentialMoves:
@@ -73,8 +75,8 @@ def learn(loops):
 			p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
 
-			if winCheck(maxUtility, p2) == 1:
-				calculate(p2moves, loop, loops)
+			if winCheck(maxUtility, p2, 4) == 1:
+				calculate(p2moves)
 				break
 
 			if potentialMoves:
@@ -86,6 +88,32 @@ def learn(loops):
 		resetPotentialMoves()
 
 
+def play():
+	learn(2000)
+	while True:
+
+		if winZones:
+			player = winZones[0]
+		elif dangerZones:
+			player = dangerZones[0]
+		else:
+			player = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+
+		board[player[0]][player[1]][player[2]] = p1
+		if winCheck(player, p1, 4) == 1:
+			print("AI wins")
+			break
+
+		opponent = input('Enter coordinates of next move: ')
+		board[int(opponent[0])][int(opponent[1])][int(opponent[2])] = p1
+		if winCheck(opponent, p2, 4) == 1:
+			print("human wins")
+			break
+
+		strategyCheck(player, p1, 3, winZones)
+		strategyCheck(opponent, p2, 3, dangerZones)
+
+
 def normalize(passedUtility):
 	sum = numpy.sum(passedUtility)
 	sum /= 64
@@ -95,7 +123,7 @@ def normalize(passedUtility):
 				passedUtility[i][j][k] /= sum
 
 
-def calculate(winner, currLoop, loops):
+def calculate(winner):
 	# match everything in the winner's dict to the board, increase
 	# do the same with the loser
 	# update the potentialMoves list
@@ -111,45 +139,108 @@ def calculate(winner, currLoop, loops):
 	p2moves.clear()
 
 
-def winCheck(move, player):
+def strategyCheck(move, player, check, arr):
+	row, col, floor = move[0], move[1], move[2]
+
+	r = collections.Counter([board[i][col][floor] for i in range(4)])
+	if r[player] == check:
+		for j in range(4):
+			if board[j][col][floor] == '':
+				arr.append((j, col, floor))
+
+	c = collections.Counter([board[row][i][floor] for i in range(4)])
+	if c[player] == check:
+		for j in range(4):
+			if board[row][j][floor] == '':
+				arr.append((row, j, floor))
+	f = collections.Counter([board[row][col][i] for i in range(4)])
+	if f[player] == check:
+		for j in range(4):
+			if board[row][col][j] == '':
+				arr.append((row, col, j))
+
+	# check diagonals
+	if row - col == 0:
+		d0 = collections.Counter([board[i][i][floor] for i in range(4)])
+		if d0[player] == check:
+			for j in range(4):
+				if board[j][j][floor] == '':
+					arr.append((j, j, floor))
+	elif row + col == 3:
+		d0 = collections.Counter([board[i][3 - i][floor] for i in range(4)])
+		if d0[player] == check:
+			for j in range(4):
+				if board[j][3-j][floor] == '':
+					arr.append((j, 3-j, floor))
+
+	if col - floor == 0:
+		d1 = collections.Counter([board[row][i][i] for i in range(4)])
+		if d1[player] == check:
+			for j in range(4):
+				if board[row][j][j] == '':
+					arr.append((row, j, j))
+	elif col + floor == 3:
+		d1 = collections.Counter([board[row][i][3 - i] for i in range(4)])
+		if d1[player] == check:
+			for j in range(4):
+				if board[row][j][3-j] == '':
+					arr.append((row, j, 3-j))
+
+	if floor - row == 0:
+		d2 = collections.Counter([board[i][col][i] for i in range(4)])
+		if d2[player] == check:
+			for j in range(4):
+				if board[j][col][j] == '':
+					arr.append((j, col, j))
+	elif floor + row == 3:
+		d2 = collections.Counter([board[i][col][3 - i] for i in range(4)])
+		if d2[player] == check:
+			for j in range(4):
+				if board[j][col][3-j] == '':
+					arr.append((j, col, 3-j))
+
+	return 0
+
+
+def winCheck(move, player, check):
 	# 0 is no win, 1 is yes win, -1 is 3-in-a-row
 	row, col, floor = move[0], move[1], move[2]
 	r = collections.Counter([board[i][col][floor] for i in range(4)])
-	if r[player] == 4:
+	if r[player] == check:
 		return 1
 	c = collections.Counter([board[row][i][floor] for i in range(4)])
-	if c[player] == 4:
+	if c[player] == check:
 		return 1
 	f = collections.Counter([board[row][col][i]for i in range(4)])
-	if f[player] == 4:
+	if f[player] == check:
 		return 1
 
 	# check diagonals
 	if row - col == 0:
 		d0 = collections.Counter([board[i][i][floor] for i in range(4)])
-		if d0[player] == 4:
+		if d0[player] == check:
 			return 1
 	elif row + col == 3:
 		d0 = collections.Counter([board[i][3 - i][floor] for i in range(4)])
-		if d0[player] == 4:
+		if d0[player] == check:
 			return 1
 
 	if col - floor == 0:
 		d1 = collections.Counter([board[row][i][i] for i in range(4)])
-		if d1[player] == 4:
+		if d1[player] == check:
 			return 1
 	elif col + floor == 3:
 		d1 = collections.Counter([board[row][i][3 - i] for i in range(4)])
-		if d1[player] == 4:
+		if d1[player] == check:
 			return 1
 
 	if floor - row == 0:
 		d2 = collections.Counter([board[i][col][i] for i in range(4)])
-		if d2[player] == 4:
+		if d2[player] == check:
 			return 1
 	elif floor + row == 3:
 		d2 = collections.Counter([board[i][col][3 - i] for i in range(4)])
-		if d2[player] == 4:
+		if d2[player] == check:
 			return 1
 
 	return 0
