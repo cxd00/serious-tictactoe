@@ -3,6 +3,7 @@ import collections
 import operator
 import numpy
 import unittest
+import random
 from unittest import TestCase
 
 
@@ -26,19 +27,23 @@ clearBoard()
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
 p1, p2 = b'X', b'O'
+explorationRate = 0.25
 potentialMoves = {}
 resetPotentialMoves()
 p1moves = collections.OrderedDict()
 p2moves = collections.OrderedDict()
-
 
 def learn(loops):
 	clearBoard()
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
 		while True:
-			# p1 chooses move based on probabilities of the board
-			p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			if numpy.random.uniform(0, 1) <= explorationRate:
+				# p1 chooses move based on probabilities of the board
+				p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			else:
+				p1move = random.choice(potentialMoves)
+				explorationRate *= 0.95
 			p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
 			if winCheck(maxUtility, p1) == 1:
@@ -46,7 +51,10 @@ def learn(loops):
 				break
 			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
-			p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			if numpy.random.uniform(0, 1) <= explorationRate:
+				p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+			else:
+				p2move = random.choice(potentialMoves)
 			p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
 			if winCheck(maxUtility, p2) == 1:
