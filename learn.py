@@ -56,7 +56,11 @@ def learn(loops):
 			if winCheck(maxUtility, p1) == 1:
 				calculate(p1moves, loop, loops)
 				break
-			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+
+			if potentialMoves():
+				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+			else:
+				break
 
 			if numpy.random.uniform(0, 1) <= explorationRate:
 				p2move = potentialMoves.pop(maxUtility)
@@ -71,7 +75,11 @@ def learn(loops):
 			if winCheck(maxUtility, p2) == 1:
 				calculate(p2moves, loop, loops)
 				break
-			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+
+			if potentialMoves():
+				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+			else:
+				break
 
 		clearBoard()
 		resetPotentialMoves()
