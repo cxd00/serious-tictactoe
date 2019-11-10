@@ -147,7 +147,7 @@ class TestLearn(TestCase):
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
-		learn(2)
+		learn(1000)
 		print(utility)
 		self.assertFalse(numpy.all(utility == 0))
 
