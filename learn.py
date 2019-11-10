@@ -139,74 +139,79 @@ def winCheck(move, player):
 
 # -------------- actual script run -------------- #
 learn(int(sys.argv[1]))
-print(utility)
+utility1 = utility
+
 learn(int(sys.argv[2]))
-print(utility)
+utility2 = utility
+
 learn(int(sys.argv[3]))
-print(utility)
+utility3 = utility
+print(utility1)
+print(utility2)
+print(utility3)
 
 
-# -------------------TESTS-------------------
-class TestLearn(TestCase):
-	# Use the following command in the terminal to view the individual test results...
-	# python -m unittest -v learn.py
-
-
-
-	#------------------LEARN TESTS---------------------
-
-	def test_learn_run(self):
-		learn(1000)
-		print(utility)
-		self.assertFalse(numpy.all(utility == 0))
-
-	#------------------WINCHECK TESTS------------------
-	def test_winCheck_floor(self):
-		clearBoard()
-		board[0][0][0] = p1
-		board[0][0][1] = p1
-		board[0][0][2] = p1
-		board[0][0][3] = p1
-		move = 0, 0, 3
-		result = winCheck(move, p1)
-		self.assertEqual(result, 1)
-
-	def test_winCheck_column(self):
-		clearBoard()
-		board[0][0][0] = p1
-		board[0][1][0] = p1
-		board[0][2][0] = p1
-		board[0][3][0] = p1
-		move = 0, 3, 0
-		result = winCheck(move, p1)
-		self.assertEqual(result, 1)
-
-	def test_winCheck_row(self):
-		clearBoard()
-		board[0][0][0] = p1
-		board[1][0][0] = p1
-		board[2][0][0] = p1
-		board[3][0][0] = p1
-		move = 3, 0, 0
-		result = winCheck(move, p1)
-		self.assertEqual(result, 1)
-
-	def test_winCheck_diagonal(self):
-		clearBoard()
-		board[0][0][0] = p1
-		board[0][1][1] = p1
-		board[0][2][2] = p1
-		board[0][3][3] = p1
-		move = 0, 3, 3
-		result = winCheck(move, p1)
-		self.assertEqual(result, 1)
-
-	def test_winCheck_no_win(self):
-		clearBoard()
-		move = 0, 0, 0
-		result = winCheck(move, p1)
-		self.assertEqual(result, 0)
-
-
-if __name__ == '__main__':
-	unittest.main()
+# # -------------------TESTS-------------------
+# class TestLearn(TestCase):
+# 	# Use the following command in the terminal to view the individual test results...
+# 	# python3 -m unittest -v learn.py
+#
+#
+#
+# 	#------------------LEARN TESTS---------------------
+#
+# 	def test_learn_run(self):
+# 		learn(1000)
+# 		print(utility)
+# 		self.assertFalse(numpy.all(utility == 0))
+#
+# 	#------------------WINCHECK TESTS------------------
+# 	def test_winCheck_floor(self):
+# 		clearBoard()
+# 		board[0][0][0] = p1
+# 		board[0][0][1] = p1
+# 		board[0][0][2] = p1
+# 		board[0][0][3] = p1
+# 		move = 0, 0, 3
+# 		result = winCheck(move, p1)
+# 		self.assertEqual(result, 1)
+#
+# 	def test_winCheck_column(self):
+# 		clearBoard()
+# 		board[0][0][0] = p1
+# 		board[0][1][0] = p1
+# 		board[0][2][0] = p1
+# 		board[0][3][0] = p1
+# 		move = 0, 3, 0
+# 		result = winCheck(move, p1)
+# 		self.assertEqual(result, 1)
+#
+# 	def test_winCheck_row(self):
+# 		clearBoard()
+# 		board[0][0][0] = p1
+# 		board[1][0][0] = p1
+# 		board[2][0][0] = p1
+# 		board[3][0][0] = p1
+# 		move = 3, 0, 0
+# 		result = winCheck(move, p1)
+# 		self.assertEqual(result, 1)
+#
+# 	def test_winCheck_diagonal(self):
+# 		clearBoard()
+# 		board[0][0][0] = p1
+# 		board[0][1][1] = p1
+# 		board[0][2][2] = p1
+# 		board[0][3][3] = p1
+# 		move = 0, 3, 3
+# 		result = winCheck(move, p1)
+# 		self.assertEqual(result, 1)
+#
+# 	def test_winCheck_no_win(self):
+# 		clearBoard()
+# 		move = 0, 0, 0
+# 		result = winCheck(move, p1)
+# 		self.assertEqual(result, 0)
+#
+#
+# if __name__ == '__main__':
+# 	unittest.main()
