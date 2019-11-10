@@ -25,6 +25,7 @@ board = numpy.chararray((4, 4, 4))
 clearBoard()
 utility = numpy.zeros((4, 4, 4))
 # board[row][col][floor]
+
 p1, p2 = b'X', b'O'
 potentialMoves = {}
 resetPotentialMoves()
@@ -42,7 +43,7 @@ def learn(loops):
 			p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
 			if winCheck(maxUtility, p1) == 1:
-				calculate(p1moves)
+				calculate(p1moves, loop, loops)
 				break
 			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
@@ -50,14 +51,17 @@ def learn(loops):
 			p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
 			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
 			if winCheck(maxUtility, p2) == 1:
-				calculate(p2moves)
+				calculate(p2moves, loop, loops)
 				break
-			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+			if potentialMoves:
+				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
+			else:
+				break
 		clearBoard()
 		resetPotentialMoves()
 
 
-def calculate(winner):
+def calculate(winner, currLoop, loops):
 	# match everything in the winner's dict to the board, increase
 	# do the same with the loser
 	# update the potentialMoves list
@@ -127,7 +131,7 @@ class TestLearn(TestCase):
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
-		learn(100)
+		learn(1000)
 		print(utility)
 		self.assertFalse(numpy.all(utility == 0))
 
