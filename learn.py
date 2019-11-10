@@ -35,6 +35,7 @@ p1moves = collections.OrderedDict()
 p2moves = collections.OrderedDict()
 
 def learn(loops):
+	global explorationRate
 	clearBoard()
 	maxUtility = (2, 2, 2)  # maxUtility are the coordinates of the best utility value
 	for loop in range(loops):
@@ -43,28 +44,26 @@ def learn(loops):
 				# p1 chooses move based on probabilities of the board
 				p1move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
 			else:
-				p1move = random.choice(potentialMoves)
+				p1move = potentialMoves.pop(random.choice(list(potentialMoves)))
 				explorationRate *= 0.95
 			p1moves[maxUtility] = p1move  # add to list of player 1's moves in the form (key:coordinate, value:utility)
-			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p1
+			board[p1move[0]][p1move[1]][p1move[2]] = p1
 			if winCheck(maxUtility, p1) == 1:
 				calculate(p1moves, loop, loops)
 				break
 			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 
 			if numpy.random.uniform(0, 1) <= explorationRate:
-				p2move = potentialMoves.pop(maxUtility)  # p1move is the best utility value
+				p2move = potentialMoves.pop(maxUtility)
 			else:
-				p2move = random.choice(potentialMoves)
+				p2move = potentialMoves.pop(random.choice(list(potentialMoves)))
+				explorationRate *= 0.95
 			p2moves[maxUtility] = p2move  # add to list of player 2's moves in the form (key:coordinate, value:utility)
-			board[maxUtility[0]][maxUtility[1]][maxUtility[2]] = p2
+			board[p2move[0]][p2move[1]][p2move[2]] = p2
 			if winCheck(maxUtility, p2) == 1:
 				calculate(p2moves, loop, loops)
 				break
-			if potentialMoves:
-				maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
-			else:
-				break
+			maxUtility = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 		clearBoard()
 		resetPotentialMoves()
 
@@ -139,7 +138,7 @@ class TestLearn(TestCase):
 	#------------------LEARN TESTS---------------------
 
 	def test_learn_run(self):
-		learn(1000)
+		learn(2)
 		print(utility)
 		self.assertFalse(numpy.all(utility == 0))
 
