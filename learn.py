@@ -98,14 +98,17 @@ def play():
 			player = dangerZones[0]
 		else:
 			player = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
-
+		potentialMoves.pop(player)
 		board[player[0]][player[1]][player[2]] = p1
+		print(player)
 		if winCheck(player, p1, 4) == 1:
 			print("AI wins")
 			break
 
 		opponent = input('Enter coordinates of next move: ')
+		opponent = int(opponent[0]), int(opponent[1]), int(opponent[2])
 		board[int(opponent[0])][int(opponent[1])][int(opponent[2])] = p1
+		potentialMoves.pop(opponent)
 		if winCheck(opponent, p2, 4) == 1:
 			print("human wins")
 			break
@@ -247,24 +250,19 @@ def winCheck(move, player, check):
 
 
 # -------------- actual script run -------------- #
-learn(int(sys.argv[1]))
-utility1 = copy.deepcopy(utility)
-normalize(utility1)
+# learn(int(sys.argv[1]))
+# utility1 = copy.deepcopy(utility)
+# normalize(utility1)
+#
+# learn(int(sys.argv[2]) - int(sys.argv[1]))
+# utility2 = copy.deepcopy(utility)
+# normalize(utility2)
+#
+# learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
+# utility3 = copy.deepcopy(utility)
+# normalize(utility3)
 
-learn(int(sys.argv[2]) - int(sys.argv[1]))
-utility2 = copy.deepcopy(utility)
-normalize(utility2)
-
-learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
-utility3 = copy.deepcopy(utility)
-normalize(utility3)
-
-print("---------------------FIRST RUN---------------------")
-print(utility1)
-print("\n---------------------SECOND RUN---------------------")
-print(utility2)
-print("\n---------------------THIRD RUN---------------------")
-print(utility3)
+play()
 
 
 # # -------------------TESTS-------------------
