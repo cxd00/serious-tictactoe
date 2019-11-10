@@ -4,6 +4,7 @@ import operator
 import numpy
 import unittest
 import random
+import copy
 from unittest import TestCase
 
 
@@ -85,6 +86,15 @@ def learn(loops):
 		resetPotentialMoves()
 
 
+def normalize(passedUtility):
+	sum = numpy.sum(passedUtility)
+	sum /= 64
+	for i in range(4):
+		for j in range(4):
+			for k in range(4):
+				passedUtility[i][j][k] /= sum
+
+
 def calculate(winner, currLoop, loops):
 	# match everything in the winner's dict to the board, increase
 	# do the same with the loser
@@ -147,16 +157,22 @@ def winCheck(move, player):
 
 # -------------- actual script run -------------- #
 learn(int(sys.argv[1]))
-utility1 = utility
+utility1 = copy.deepcopy(utility)
+normalize(utility1)
 
 learn(int(sys.argv[2]) - int(sys.argv[1]))
-utility2 = utility
+utility2 = copy.deepcopy(utility)
+normalize(utility2)
 
 learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
-utility3 = utility
-print(numpy.sum(utility3))
+utility3 = copy.deepcopy(utility)
+normalize(utility3)
+
+print("---------------------FIRST RUN---------------------")
 print(utility1)
+print("\n---------------------SECOND RUN---------------------")
 print(utility2)
+print("\n---------------------THIRD RUN---------------------")
 print(utility3)
 
 
