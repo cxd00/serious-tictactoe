@@ -108,7 +108,6 @@ def play():
 		if winCheck(player, p1, 4) == 1:
 			print("AI wins")
 			break
-
 		opponent = input('Enter coordinates of next move: ')
 		opponent = int(opponent[0]), int(opponent[1]), int(opponent[2])
 		board[int(opponent[0])][int(opponent[1])][int(opponent[2])] = p2
@@ -119,6 +118,9 @@ def play():
 
 		strategyCheck(player, p1, 3, winZones)
 		strategyCheck(opponent, p2, 3, dangerZones)
+		if len(potentialMoves) <= 39:
+			strategyCheck(player, p1, 2, winZones)
+			strategyCheck(opponent, p2, 2, dangerZones)
 
 
 def normalize(passedUtility):
