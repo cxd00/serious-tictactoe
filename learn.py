@@ -138,12 +138,12 @@ def calculate(winner):
 	# match everything in the winner's dict to the board, increase
 	# do the same with the loser
 	# update the potentialMoves list
-	qMax = 1
-	alpha = 0.4
-	while not len(winner.keys()) == 0:
+	qMax = 1  # reward for winning
+	alpha = 0.4  # depreciation value
+	while not len(winner.keys()) == 0:  # while there are moves in the winner's list
 		x, y, z = list(winner.keys())[-1][0], list(winner.keys())[-1][1], list(winner.keys())[-1][2]
-		utility[x][y][z] += alpha * qMax  # update utility function with Q-value
-		qMax = qMax * alpha
+		utility[x][y][z] += alpha * qMax  # update utility function with reward
+		qMax = qMax * alpha  # depreciate reward
 		potentialMoves[(x, y, z)] = utility[x][y][z]  # update potentialMoves (re-set)
 		del winner[(x, y, z)]
 	p1moves.clear()
