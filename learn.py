@@ -26,6 +26,7 @@ def resetPotentialMoves():
 board = numpy.chararray((4, 4, 4))
 clearBoard()
 utility = numpy.zeros((4, 4, 4))
+numpy.set_printoptions(precision=3)
 # board[row][col][floor]
 
 p1, p2 = b'X', b'O'
@@ -89,7 +90,7 @@ def learn(loops):
 
 
 def play():
-	learn(1000)
+	learn(2000)
 	while not len(potentialMoves) == 0:
 
 		if winZones:
@@ -257,27 +258,26 @@ def winCheck(move, player, check):
 
 
 # -------------- actual script run -------------- #
-# learn(int(sys.argv[1]))
-# utility1 = copy.deepcopy(utility)
-# normalize(utility1)
-# print("---------------FIRST TRIAL---------------")
-# print(sys.argv[1] + " runs")
-# print(utility1)
-#
-# learn(int(sys.argv[2]) - int(sys.argv[1]))
-# utility2 = copy.deepcopy(utility)
-# normalize(utility2)
-# print("---------------SECOND TRIAL---------------")
-# print(sys.argv[2] + " runs")
-# print(utility2)
-#
-# learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
-# utility3 = copy.deepcopy(utility)
-# normalize(utility3)
-# print("---------------THIRD TRIAL---------------")
-# print(sys.argv[3] + " runs")
-# print(utility3)
-play()
+learn(int(sys.argv[1]))
+utility1 = copy.deepcopy(utility)
+normalize(utility1)
+print("---------------FIRST TRIAL---------------")
+print(sys.argv[1] + " runs")
+print(utility1)
+
+learn(int(sys.argv[2]) - int(sys.argv[1]))
+utility2 = copy.deepcopy(utility)
+normalize(utility2)
+print("---------------SECOND TRIAL---------------")
+print(sys.argv[2] + " runs")
+print(utility2)
+
+learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
+utility3 = copy.deepcopy(utility)
+normalize(utility3)
+print("---------------THIRD TRIAL---------------")
+print(sys.argv[3] + " runs")
+print(utility3)
 
 # -------------------TESTS-------------------
 # class TestLearn(TestCase):
