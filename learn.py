@@ -90,7 +90,7 @@ def learn(loops):
 
 def play():
 	learn(1000)
-	while True:
+	while not len(potentialMoves) == 0:
 
 		if winZones:
 			player = winZones.pop(0)
@@ -102,8 +102,6 @@ def play():
 		board[player[0]][player[1]][player[2]] = p1
 		print(board)
 		print(player)
-		print(winZones)
-		print(dangerZones)
 
 		if winCheck(player, p1, 4) == 1:
 			print("AI wins")
@@ -121,6 +119,9 @@ def play():
 		if len(potentialMoves) <= 39:
 			strategyCheck(player, p1, 2, winZones)
 			strategyCheck(opponent, p2, 2, dangerZones)
+		print(winZones)
+		print(dangerZones)
+
 
 
 def normalize(passedUtility):
@@ -256,27 +257,27 @@ def winCheck(move, player, check):
 
 
 # -------------- actual script run -------------- #
-learn(int(sys.argv[1]))
-utility1 = copy.deepcopy(utility)
-normalize(utility1)
-print("---------------FIRST TRIAL---------------")
-print(sys.argv[1] + " runs")
-print(utility1)
-
-learn(int(sys.argv[2]) - int(sys.argv[1]))
-utility2 = copy.deepcopy(utility)
-normalize(utility2)
-print("---------------SECOND TRIAL---------------")
-print(sys.argv[2] + " runs")
-print(utility2)
-
-learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
-utility3 = copy.deepcopy(utility)
-normalize(utility3)
-print("---------------THIRD TRIAL---------------")
-print(sys.argv[3] + " runs")
-print(utility3)
-
+# learn(int(sys.argv[1]))
+# utility1 = copy.deepcopy(utility)
+# normalize(utility1)
+# print("---------------FIRST TRIAL---------------")
+# print(sys.argv[1] + " runs")
+# print(utility1)
+#
+# learn(int(sys.argv[2]) - int(sys.argv[1]))
+# utility2 = copy.deepcopy(utility)
+# normalize(utility2)
+# print("---------------SECOND TRIAL---------------")
+# print(sys.argv[2] + " runs")
+# print(utility2)
+#
+# learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
+# utility3 = copy.deepcopy(utility)
+# normalize(utility3)
+# print("---------------THIRD TRIAL---------------")
+# print(sys.argv[3] + " runs")
+# print(utility3)
+play()
 
 # -------------------TESTS-------------------
 # class TestLearn(TestCase):
