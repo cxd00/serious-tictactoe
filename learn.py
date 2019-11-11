@@ -256,19 +256,26 @@ def winCheck(move, player, check):
 
 
 # -------------- actual script run -------------- #
-# learn(int(sys.argv[1]))
-# utility1 = copy.deepcopy(utility)
-# normalize(utility1)
-#
-# learn(int(sys.argv[2]) - int(sys.argv[1]))
-# utility2 = copy.deepcopy(utility)
-# normalize(utility2)
-#
-# learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
-# utility3 = copy.deepcopy(utility)
-# normalize(utility3)
+learn(int(sys.argv[1]))
+utility1 = copy.deepcopy(utility)
+normalize(utility1)
+print("---------------FIRST TRIAL---------------")
+print(sys.argv[1] + " runs")
+print(utility1)
 
-play()
+learn(int(sys.argv[2]) - int(sys.argv[1]))
+utility2 = copy.deepcopy(utility)
+normalize(utility2)
+print("---------------SECOND TRIAL---------------")
+print(sys.argv[2] + " runs")
+print(utility2)
+
+learn(int(sys.argv[3]) - int(sys.argv[2]) - int(sys.argv[1]))
+utility3 = copy.deepcopy(utility)
+normalize(utility3)
+print("---------------THIRD TRIAL---------------")
+print(sys.argv[3] + " runs")
+print(utility3)
 
 
 # -------------------TESTS-------------------
@@ -331,6 +338,6 @@ play()
 # 		move = 0, 0, 0
 # 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 0)
-
-if __name__ == '__main__':
-	unittest.main()
+#
+# if __name__ == '__main__':
+# 	unittest.main()
