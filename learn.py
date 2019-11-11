@@ -93,21 +93,25 @@ def play():
 	while True:
 
 		if winZones:
-			player = winZones[0]
+			player = winZones.pop(0)
 		elif dangerZones:
-			player = dangerZones[0]
+			player = dangerZones.pop(0)
 		else:
 			player = max(potentialMoves.items(), key=operator.itemgetter(1))[0]
 		potentialMoves.pop(player)
 		board[player[0]][player[1]][player[2]] = p1
+		print(board)
 		print(player)
+		print(winZones)
+		print(dangerZones)
+
 		if winCheck(player, p1, 4) == 1:
 			print("AI wins")
 			break
 
 		opponent = input('Enter coordinates of next move: ')
 		opponent = int(opponent[0]), int(opponent[1]), int(opponent[2])
-		board[int(opponent[0])][int(opponent[1])][int(opponent[2])] = p1
+		board[int(opponent[0])][int(opponent[1])][int(opponent[2])] = p2
 		potentialMoves.pop(opponent)
 		if winCheck(opponent, p2, 4) == 1:
 			print("human wins")
@@ -265,7 +269,7 @@ def winCheck(move, player, check):
 play()
 
 
-# # -------------------TESTS-------------------
+# -------------------TESTS-------------------
 # class TestLearn(TestCase):
 # 	# Use the following command in the terminal to view the individual test results...
 # 	# python3 -m unittest -v learn.py
@@ -287,7 +291,7 @@ play()
 # 		board[0][0][2] = p1
 # 		board[0][0][3] = p1
 # 		move = 0, 0, 3
-# 		result = winCheck(move, p1)
+# 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 1)
 #
 # 	def test_winCheck_column(self):
@@ -297,7 +301,7 @@ play()
 # 		board[0][2][0] = p1
 # 		board[0][3][0] = p1
 # 		move = 0, 3, 0
-# 		result = winCheck(move, p1)
+# 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 1)
 #
 # 	def test_winCheck_row(self):
@@ -307,7 +311,7 @@ play()
 # 		board[2][0][0] = p1
 # 		board[3][0][0] = p1
 # 		move = 3, 0, 0
-# 		result = winCheck(move, p1)
+# 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 1)
 #
 # 	def test_winCheck_diagonal(self):
@@ -317,15 +321,14 @@ play()
 # 		board[0][2][2] = p1
 # 		board[0][3][3] = p1
 # 		move = 0, 3, 3
-# 		result = winCheck(move, p1)
+# 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 1)
 #
 # 	def test_winCheck_no_win(self):
 # 		clearBoard()
 # 		move = 0, 0, 0
-# 		result = winCheck(move, p1)
+# 		result = winCheck(move, p1, 4)
 # 		self.assertEqual(result, 0)
-#
-#
-# if __name__ == '__main__':
-# 	unittest.main()
+
+if __name__ == '__main__':
+	unittest.main()
