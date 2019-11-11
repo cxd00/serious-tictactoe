@@ -89,7 +89,7 @@ def learn(loops):
 
 
 def play():
-	learn(2000)
+	learn(1000)
 	while True:
 
 		if winZones:
